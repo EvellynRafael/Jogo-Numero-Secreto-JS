@@ -1,34 +1,67 @@
-alert('Boas vindas ao jogo do número secreto');
-let numeroMaximo = 5000;
-let numeroSecreto = parseInt(Math.random() * numeroMaximo + 1);
-console.log(numeroSecreto);
-let chute;
+let numeroSecreto = gerarNumeroAleatorio();
 let tentativas = 1;
 
+//Criando a função
+function exibirTextoNaTela(tag, texto){
+    let campo = document.querySelector(tag);
+    campo.innerHTML = texto
+}
 
-while (chute != numeroSecreto){
-    chute = prompt(`Escolha um número entre 1 e ${numeroMaximo}`);
+function exibirMensagemInicial(){
+    //executando a função
+    exibirTextoNaTela('h1', 'Jogo do número secreto');
+    exibirTextoNaTela('p', 'Escolha um número entre 1 e 10');
+}
 
+exibirMensagemInicial();
+
+function verificarChute() {
+    let chute = document.querySelector('input').value; //Quero pegar somente o valor e não o HTML inteiro
+    
     if (chute == numeroSecreto) {
-        break;
+        exibirTextoNaTela('h1', 'Parabéns, você acertou!');
         
+        let palavraTentativa = tentativas > 1 ? 'tentativas' : 'tentativa';
+        let mensagemTentativas = `Você descobriu o número secreto com ${tentativas} ${palavraTentativa}`;
+
+        exibirTextoNaTela('p', mensagemTentativas);
+        //Como tem mais de um botão, estarei pegando esse pelo Id (que está lá no html)
+        document.getElementById('reiniciar').removeAttribute('disabled');
+        //removendo o atributo que também se encontra no html
+
     } else {
         if (chute > numeroSecreto){
-            alert(`O número secreto é menor que o ${chute}`);
+
+            exibirTextoNaTela('h1', 'Errou!');
+            exibirTextoNaTela('p', 'O número secreto é menor');
+
         } else {
-            alert(`O número secreto é maior que o ${chute}`);
+
+            exibirTextoNaTela('h1', 'Errou!');
+            exibirTextoNaTela('p', 'O número secreto é maior');
+
         }
-        //tentativas = tentativas + 1;
+
         tentativas++;
-    }    
-} 
 
-let palavraTentativa = tentativas > 1 ? 'tentativas' : 'tentativa' //Isso se chama operador ternário
-alert(`Isso aí! Você descobriuo número secreto ${numeroSecreto} com ${tentativas} ${palavraTentativa}`);
+        limparCampo();
+    }
+}
 
-/* if (tentativas > 1){
-    alert(`Isso aí! Você descobriuo número secreto ${numeroSecreto} com ${tentativas} tentativas`); //Utilizando Template Strings
-} else {
-    alert(`Isso aí! Você descobriuo número secreto ${numeroSecreto} com ${tentativas} tentativa`); //Utilizando Template Strings
-} */
+function gerarNumeroAleatorio() {
+    return parseInt(Math.random() * 10 + 1);
+    //Esse return vai fazer com que o resultado seja armazenado na variavel lá em cima. 
+}
 
+function limparCampo(){
+    chute = document.querySelector('input'); //estou pegando o campo
+    chute.value = ''; //e informando que agora quero que ele seja uma string vazia
+}
+
+function reiniciarJogo(){
+    numeroSecreto = gerarNumeroAleatorio();
+    limparCampo();
+    tentativas = 1;
+    exibirMensagemInicial();
+    document.getElementById('reiniciar').setAttribute('disabled', true); //dessa vez, colocando de volta o atributo
+}
